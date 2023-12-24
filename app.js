@@ -57,7 +57,12 @@ app.post("/register", async (request, response) => {
     if (validatePassword(password)) {
       await database.run(createUserQuery);
       let responseStatus = "User created successfully";
-      response.send({ responseStatus });
+
+      const payload = {
+        username: username,
+      };
+      const jwt_token = jwt.sign(payload, "MY_SECRET_TOKEN");
+      response.send({ responseStatus, jwt_token });
     } else {
       response.status(400);
       let responseStatus = "Password is too short";
